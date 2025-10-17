@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SECURE SYSTEM | ACCESS POINT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        body {
+            background: #000;
+            color: #0f0;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Matrix Rain Background */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        /* Login Page Styles */
+        .login-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            background: rgba(0, 20, 0, 0.8);
+            border: 2px solid #0f0;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 0 30px #0f0;
+            animation: glitch 5s infinite;
+        }
+
+        @keyframes glitch {
+            0%, 100% { transform: translate(-50%, -50%) translate(0, 0); }
+            5% { transform: translate(-50%, -50%) translate(-2px, 2px); }
+            10% { transform: translate(-50%, -50%) translate(2px, -2px); }
+            15% { transform: translate(-50%, -50%) translate(0, 0); }
+            50% { transform: translate(-50%, -50%) translate(0, 0); }
+        }
+
+        .login-title {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+            text-shadow: 0 0 10px #0f0;
+            animation: textGlow 2s infinite;
+        }
+
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 10px #0f0; }
+            50% { text-shadow: 0 0 20px #0f0, 0 0 30px #0f0; }
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            background: #000;
+            border: 1px solid #0f0;
+            color: #0f0;
+            border-radius: 5px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            box-shadow: 0 0 10px #0f0;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: #000;
+            color: #0f0;
+            border: 1px solid #0f0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            background: #0f0;
+            color: #000;
+            box-shadow: 0 0 15px #0f0;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .loading-bar {
+            width: 100%;
+            height: 4px;
+            background: #000;
+            border: 1px solid #0f0;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .loading-progress {
+            width: 0%;
+            height: 100%;
+            background: #0f0;
+            animation: loading 3s linear;
+        }
+
+        @keyframes loading {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        /* Error Message */
+        .error-message {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid #f00;
+            border-radius: 5px;
+            color: #f00;
+            animation: errorPulse 2s infinite;
+        }
+
+        @keyframes errorPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .owner-contact {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            border-top: 1px solid #0f0;
+        }
+
+        .owner-link {
+            color: #0ff;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .owner-link:hover {
+            color: #fff;
+            text-shadow: 0 0 10px #0ff;
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            display: none;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: headerAnimation 3s infinite;
+        }
+
+        @keyframes headerAnimation {
+            0%, 100% { 
+                transform: scale(1);
+                text-shadow: 0 0 20px #0f0;
+            }
+            50% { 
+                transform: scale(1.05);
+                text-shadow: 0 0 30px #0f0, 0 0 40px #0f0;
+            }
+        }
+
+        .main-title {
+            font-size: 48px;
+            color: #f00;
+            text-shadow: 0 0 20px #f00;
+            animation: titleGlitch 2s infinite;
+        }
+
+        @keyframes titleGlitch {
+            0%, 100% { 
+                transform: translateX(0);
+                color: #f00;
+            }
+            25% { 
+                transform: translateX(-2px);
+                color: #0f0;
+            }
+            50% { 
+                transform: translateX(2px);
+                color: #00f;
+            }
+            75% { 
+                transform: translateX(-1px);
+                color: #ff0;
+            }
+        }
+
+        .control-panel {
+            background: rgba(0, 20, 0, 0.8);
+            border: 2px solid #0f0;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 600px;
+            box-shadow: 0 0 20px #0f0;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .input-row input {
+            flex: 1;
+            padding: 10px;
+            background: #000;
+            border: 1px solid #0f0;
+            color: #0f0;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .start-btn {
+            width: 100%;
+            padding: 15px;
+            background: #000;
+            color: #f00;
+            border: 2px solid #f00;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .start-btn:hover {
+            background: #f00;
+            color: #000;
+            box-shadow: 0 0 30px #f00;
+        }
+
+        .result {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid #f00;
+            border-radius: 5px;
+            animation: resultPulse 1s infinite;
+        }
+
+        @keyframes resultPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Terminal Styles */
+        .terminal {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #0f0;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 12px;
+            height: 100px;
+            overflow-y: auto;
+        }
+
+        .terminal-line {
+            animation: typeWriter 0.1s steps(40);
+        }
+
+        @keyframes typeWriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Matrix Rain Background -->
+    <canvas class="matrix-bg" id="matrix"></canvas>
+
+    <!-- Login Page -->
+    <div class="login-container" id="loginPage">
+        <div class="login-title">
+            🔐 SECURE ACCESS POINT
+        </div>
+        <div class="input-group">
+            <label>USERNAME:</label>
+            <input type="text" id="username" placeholder="Enter username...">
+        </div>
+        <div class="input-group">
+            <label>PASSWORD:</label>
+            <input type="password" id="password" placeholder="Enter password...">
+        </div>
+        <div class="btn-group">
+            <button class="btn" onclick="login()">LOGIN</button>
+            <button class="btn" onclick="showMessage('Signup feature disabled')">SIGN UP</button>
+            <button class="btn" onclick="showMessage('Password recovery unavailable')">FORGOT PWD</button>
+        </div>
+        
+        <!-- Error Message -->
+        <div class="error-message" id="errorMessage">
+            ❌ INCORRECT USERNAME OR PASSWORD<br>
+            PLEASE CONTACT OWNER TO GET IT
+        </div>
+        
+        <!-- Owner Contact -->
+        <div class="owner-contact">
+            <a href="https://t.me/rajaXkhan" class="owner-link" target="_blank">
+                📱 CONTACT OWNER: @rajaXkhan (Telegram)
+            </a>
+        </div>
+        
+        <div class="loading" id="loginLoading">
+            <div>INITIALIZING SYSTEM ACCESS...</div>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <div class="header">
+            <h1 class="main-title">🚀 PAID MASS REPO 🚀</h1>
+            <div style="color: #0f0; margin-top: 10px;">ADVANCED REPOSITORY MANAGEMENT SYSTEM</div>
+        </div>
+
+        <div class="control-panel">
+            <div class="input-row">
+                <input type="text" id="repoLink" placeholder="Enter repository link...">
+                <input type="number" id="repoCount" placeholder="Count" value="1" min="1" max="100">
+            </div>
+            <button class="start-btn" onclick="startRepo()">🚀 INITIATE MASS REPO</button>
+            
+            <div class="result" id="result">
+                <div style="font-size: 24px; color: #f00; margin-bottom: 10px;">⚠️ REPO ACTIVATED ⚠️</div>
+                <div>MASS REPOSITORY DEPLOYMENT INITIATED SUCCESSFULLY!</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terminal -->
+    <div class="terminal" id="terminal">
+        <div class="terminal-line">> SYSTEM BOOTED - READY FOR AUTHENTICATION</div>
+    </div>
+
+    <script>
+        // Matrix Rain Effect
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const chars = "01010101010101010101010101010101010101010101010101";
+        const charArray = chars.split("");
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+        
+        for(let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+        
+        function drawMatrix() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.04)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = "#0f0";
+            ctx.font = fontSize + "px monospace";
+            
+            for(let i = 0; i < drops.length; i++) {
+                const text = charArray[Math.floor(Math.random() * charArray.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        
+        setInterval(drawMatrix, 35);
+
+        // Login Function
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Hide error message initially
+            errorMessage.style.display = 'none';
+            
+            // Correct credentials
+            const correctUsername = "@RajakMassRepo";
+            const correctPassword = "RajakMass";
+            
+            if(username === correctUsername && password === correctPassword) {
+                // Correct credentials
+                document.getElementById('loginLoading').style.display = 'block';
+                addTerminalLine('> ATTEMPTING USER AUTHENTICATION...');
+                
+                setTimeout(() => {
+                    addTerminalLine('> CREDENTIALS VERIFIED...');
+                    addTerminalLine('> ACCESS GRANTED...');
+                    
+                    setTimeout(() => {
+                        document.getElementById('loginPage').style.display = 'none';
+                        addTerminalLine('> INITIATING DASHBOARD LOAD...');
+                        
+                        setTimeout(() => {
+                            document.getElementById('dashboard').style.display = 'block';
+                            addTerminalLine('> DASHBOARD READY - WELCOME USER');
+                            
+                            // Dashboard entry animation
+                            const dashboard = document.getElementById('dashboard');
+                            dashboard.style.animation = 'glitch 2s';
+                            setTimeout(() => {
+                                dashboard.style.animation = '';
+                            }, 2000);
+                            
+                        }, 2000);
+                    }, 1000);
+                }, 2000);
+            } else {
+                // Wrong credentials
+                addTerminalLine('> ACCESS DENIED: Invalid credentials');
+                errorMessage.style.display = 'block';
+                
+                // Add shake effect to login container
+                const loginContainer = document.getElementById('loginPage');
+                loginContainer.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    loginContainer.style.animation = 'glitch 5s infinite';
+                }, 500);
+            }
+        }
+
+        // Start Repo Function
+        function startRepo() {
+            const link = document.getElementById('repoLink').value;
+            const count = document.getElementById('repoCount').value;
+            
+            if(!link) {
+                showMessage('ERROR: No repository link provided');
+                return;
+            }
+            
+            addTerminalLine('> INITIATING MASS REPO SEQUENCE...');
+            addTerminalLine('> TARGET: ' + link);
+            addTerminalLine('> COUNT: ' + count);
+            
+            // Page shake effect
+            document.body.style.animation = 'shake 0.5s';
+            setTimeout(() => {
+                document.body.style.animation = '';
+            }, 500);
+            
+            // Show result after 5 seconds
+            setTimeout(() => {
+                document.getElementById('result').style.display = 'block';
+                addTerminalLine('> REPO WAS STARTED SUCCESSFULLY!');
+                addTerminalLine('> ALL TARGETS ENGAGED');
+            }, 5000);
+        }
+
+        // Utility Functions
+        function showMessage(msg) {
+            addTerminalLine('> SYSTEM: ' + msg);
+        }
+
+        function addTerminalLine(text) {
+            const terminal = document.getElementById('terminal');
+            const line = document.createElement('div');
+            line.className = 'terminal-line';
+            line.textContent = text;
+            terminal.appendChild(line);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        // Add shake animation for errors
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translate(-50%, -50%) translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translate(-50%, -50%) translateX(-10px); }
+                20%, 40%, 60%, 80% { transform: translate(-50%, -50%) translateX(10px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initial terminal messages
+        setTimeout(() => addTerminalLine('> SECURITY SYSTEM ACTIVE'), 1000);
+        setTimeout(() => addTerminalLine('> ENCRYPTION: AES-256'), 2000);
+        setTimeout(() => addTerminalLine('> AWAITING USER INPUT...'), 3000);
+    </script>
+</body>
+</html>
